@@ -22,7 +22,8 @@ namespace API.Extensions
             services.AddSingleton<IConnectionMultiplexer>(c => 
             {
                 var options = ConfigurationOptions.Parse(config.GetConnectionString("Redis"));
-                return ConnectionMultiplexer.Connect(options);
+                
+                return ConnectionMultiplexer.Connect("localhost");
             });
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();

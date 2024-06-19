@@ -1,29 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { AccountService } from './account/account.service';
-import { BasketService } from './basket/basket.service';
+import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { error } from 'console';
+import { response } from 'express';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'Skinet';
 
-  constructor(private basketService: BasketService, private accountService: AccountService) {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.loadBasket();
-    this.loadCurrentUser();
-  }
-
-  loadBasket() {
-    const basketId = localStorage.getItem('basket_id');
-    if (basketId) this.basketService.getBasket(basketId);
-  }
-
-  loadCurrentUser() {
-    const token = localStorage.getItem('token');
-    this.accountService.loadCurrentUser(token).subscribe();
+    this.http.get('https://localhost:5001/api/products').subscribe({
+      next: (response) => console.log(response),
+      error: (error) => console.log(error),
+      complete: () => {
+        console.log('req completed!');
+        console.log('extra statement!');
+      },
+    });
   }
 }

@@ -5,6 +5,7 @@ using Infrastructue.Data;
 using Infrastructure.Data;
 using Infrastructure.Data.Identity;
 using Infrastructure.Identity;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -12,7 +13,17 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                                     .AllowAnyMethod()
+                                     .AllowAnyHeader()
+                                     .AllowCredentials();
+        });
+});
 builder.Services.AddControllers();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
@@ -34,7 +45,7 @@ app.UseStaticFiles(new StaticFileOptions
         Path.Combine(Directory.GetCurrentDirectory(), "Content")), RequestPath = "/Content"
 });
 
-app.UseCors("CorsPolicy");
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
